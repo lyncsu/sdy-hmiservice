@@ -1,0 +1,32 @@
+{
+  "name": "hmi-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --progress --stats none --config build/webpack.dev.conf.js",
+    "build": "node build/build.js"
+  },
+  "author": "LYNC",
+  "license": "ISC",
+  "devDependencies": {
+    "@soda/friendly-errors-webpack-plugin": "^1.8.0",
+    "chalk": "^2.4.2",
+    "css-loader": "^7.1.3",
+    "html-webpack-plugin": "^5.3.2",
+    "node-notifier": "^10.0.0",
+    "portfinder": "^1.0.28",
+    "script-loader": "^0.7.2",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.44.0",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.0.0-beta.3",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "jquery": "^3.7.1",
+    "pako": "^2.1.0"
+  }
+}
