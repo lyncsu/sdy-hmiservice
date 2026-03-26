@@ -1,5 +1,3 @@
-import { Page } from '../model/Page';
-
 /**
  * 检查对象是否可用
  * @param object

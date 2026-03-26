@@ -1,8 +1,9 @@
 import ProjectService from './service/ProjectService';
 import EventDispatcher from './event/EventDispatcher';
-import { isAvaliable } from './utils/Util';
+import { clone, isAvaliable } from './utils/Util';
+import Global from './event/Global';
 /**
- * Hmi运行时
+ * Hmi服务
  */
 class HmiService extends EventDispatcher {
     /**
@@ -26,68 +27,34 @@ class HmiService extends EventDispatcher {
      */
     init(
         params = {
-            url: '/project.json',
             debug: true,
         },
     ) {
         return new Promise((resolve, reject) => {
-            if (!isAvaliable(params?.url)) return reject('url项目配置路径必填');
-            if (!isAvaliable(params?.containerId)) return reject('containerId渲染容器必填');
-            if (!isAvaliable(params?.element_url)) return reject('element_url图元路径必填');
+            if (!isAvaliable(params?.gateway)) return reject('大网关项目配置必填');
+            else ProjectService.projectData.server.gateway = params?.gateway;
             if (isAvaliable(params?.debug)) Global.debug = params?.debug;
-            // 注册渲染器
-            Renderer.register(params.containerId);
-            // 加载图元库
-            loadScript(params?.element_url).then(
-                () => {
-                    // 加载项目配置
-                    ProjectService.load(params.url).then(
-                        () => {
-                            this._initialized = true;
-                            resolve();
-                            this.emit('loaded');
-                            // 登录信息
-                            // if (isAvaliable(params?.auth)) this.login(params.auth);
-                        },
-                        err => {
-                            const msg = '项目文件读取失败, 请检查配置路径是否正确';
-                            console.error(msg, err);
-                            // this.logService.error(msg, err);
-                            reject(msg);
-                        },
-                    );
-                },
-                err => {
-                    reject(err);
-                },
-            );
-        });
-    }
-    /**
-     * 切换视图
-     * @param {*} param
-     */
-    changeView(param) {
-        return this.changePage(param);
-    }
-    /**
-     * 切换视图
-     * @param {*} param
-     * @returns
-     */
-    changePage(param) {
-        return new Promise((resolve, reject) => {
-            if (!this._initialized) reject('尚未初始化完成');
-            if (!isAvaliable(param)) return reject('请传入正确的视图名称或id');
 
-            const hasPage = ProjectService.hasPage(param);
-            if (!hasPage) return reject('找不到对应名称的视图');
-
-            const loaded = ProjectService.loadPage(param);
-            Renderer.renderPage(loaded);
-            // this.propertyPanel?.hide();
+            this._initialized = true;
             resolve();
         });
+    }
+    /**
+     * 权限
+     * @description    let authObj = {
+        "dxt": 2,  //大系统 1=中心|2=车站|3=IBP
+        "xxt": 2,  //小系统
+        "sdt": 2,  //隧道通风
+        "zmxt": 2, //照明系统
+        "jpsxt": 2, // 给排水
+        "ktsxt": 2  // 空调水系统
+        }
+        window.isCenter ：Boolean //  true 表示当前登录角色是中央 false 表示是车站角色
+        window.currentSys : keyof authObj // HMI当前页面展示哪个系统 值为 dxt、xxt、...
+     */
+    setPermission(authObj) {
+        if (!isAvaliable(authObj)) return;
+        this.authService.permission = clone(authObj);
     }
 }
 
