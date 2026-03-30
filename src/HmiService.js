@@ -2,6 +2,7 @@ import ProjectService from './service/ProjectService';
 import EventDispatcher from './event/EventDispatcher';
 import { clone, isAvaliable } from './utils/Util';
 import Global from './event/Global';
+import { MqttService } from './service/MqttService';
 /**
  * Hmi服务
  */
@@ -10,6 +11,10 @@ class HmiService extends EventDispatcher {
      * 初始化完成
      */
     _initialized;
+    /**
+     * 通讯服务
+     */
+    mqttService;
     /**
      * 构造函数
      */
@@ -36,6 +41,9 @@ class HmiService extends EventDispatcher {
             if (isAvaliable(params?.debug)) Global.debug = params?.debug;
 
             this._initialized = true;
+
+            this.mqttService = new MqttService();
+            this.mqttService.init();
             resolve();
         });
     }

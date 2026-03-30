@@ -10,7 +10,12 @@ export class Testcase {
     constructor() {
         hmiService
             .init({
-                containerId: 'hmi-container',
+                gateway: {
+                    host: '10.161.0.201',
+                    port: 8085,
+                    username: 'sec-dt',
+                    password: 'SecdtEdge123456',
+                },
             })
             .then(() => {});
 

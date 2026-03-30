@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^1.13.2",
+    "debug": "^4.4.3",
     "jquery": "^3.7.1",
     "mqtt-browser": "^4.3.7",
     "pako": "^2.1.0"
