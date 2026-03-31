@@ -124,7 +124,6 @@ export class MqttService extends EventDispatcher {
 
             if (isAvaliable(this.subscriptions)) {
                 const index = this.subscriptions.findIndex(sub => sub === `${productKey}/${deviceSN}`);
-                console.info('index', index);
                 if (index !== -1) {
                     const item = this.subscriptions.splice(index, 1);
                     if (this.client)
@@ -139,7 +138,7 @@ export class MqttService extends EventDispatcher {
                 // 下发订阅
                 if (isAvaliable(this.downSubscriptions)) {
                     const downIndex = this.downSubscriptions.findIndex(sub => sub === `${productKey}/${deviceSN}`);
-                    if (index !== -1) {
+                    if (downItem !== -1) {
                         const downItem = this.subscriptions.splice(downIndex, 1);
                         if (this.client)
                             this.client.unsubscribe(`v1/${downItem}/sys/property/down_reply`, err => {
