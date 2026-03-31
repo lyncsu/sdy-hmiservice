@@ -1,3 +1,4 @@
+import { MqttMessageType } from '../service/MqttService';
 import { isAvaliable } from './Util';
 /**
  * 从topic提取设备
@@ -81,4 +82,20 @@ export function filterDeviceTypeNodes(data) {
         if (isAvaliable(item.children)) filterDeviceTypeNodes(item.children);
         return item;
     });
+}
+
+/**
+ * 通过topic检查消息类型
+ * @param topic
+ * @returns
+ */
+export function checkTypeByTopic(topic) {
+    if (typeof topic !== 'string') return MqttMessageType.UNKNOWN;
+    if (topic.indexOf('sys/property/up') !== -1) return MqttMessageType.DEVICE;
+    if (topic.indexOf('hci/alarm') !== -1) return MqttMessageType.ALARM;
+    if (topic.indexOf('sys/property/down_reply') !== -1) return MqttMessageType.DOWN_REPLY;
+    if (topic.indexOf('hci/hmi/mode/notice/start') !== -1) return MqttMessageType.MODE_EXECUTE;
+    if (topic.indexOf('hci/hmi/mode/notice/stop/response') !== -1) return MqttMessageType.MODE_EXIT;
+    if (topic.indexOf('sys/onlinestatus/up') !== -1) return MqttMessageType.ONLINE;
+    return MqttMessageType.UNKNOWN;
 }
