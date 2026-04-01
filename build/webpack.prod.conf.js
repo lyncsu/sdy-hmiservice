@@ -7,17 +7,18 @@ const packageConf = require('../package.json');
 const webpackBase = require('./webpack.base.conf');
 const util = require('./util');
 const { needBundleReport } = util.parseProcVariable();
+const TerserPlugin = require('terser-webpack-plugin');
 
 // 继承并注入生产环境配置
 const webpackProd = merge(webpackBase, {
     mode: 'production',
     stats: 'errors-only',
     entry: {
-        hmiservice: {
+        hmiService: {
             import: './src/HmiService.js',
             filename: `hmiservice.min.js`,
             library: {
-                name: 'hmiservice',
+                name: 'hmiService',
                 type: 'umd',
                 umdNamedDefine: true,
                 export: 'default',
@@ -32,6 +33,16 @@ const webpackProd = merge(webpackBase, {
         // enabledWasmLoadingTypes: ['fetch'],
     },
     optimization: {
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
+                },
+            }),
+        ],
         // chunkIds: 'named',
         // splitChunks: {
         //   minSize: {
