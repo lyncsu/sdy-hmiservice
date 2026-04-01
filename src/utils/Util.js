@@ -264,3 +264,30 @@ export function guid() {
     }
     return rtn.join('');
 }
+/**
+ * 生成随机数id
+ * @param {*} min
+ * @param {*} max
+ * @returns
+ */
+export function getUInt32ID(min = 0, max = 4294967295) {
+    // 参数验证
+    min = Math.max(0, Math.min(min, 4294967295));
+    max = Math.max(0, Math.min(max, 4294967295));
+
+    if (min > max) {
+        [min, max] = [max, min];
+    }
+    const range = max - min + 1;
+    if (crypto && crypto.getRandomValues) {
+        // 使用安全的随机数生成方法
+        const randomBuffer = new Uint32Array(1);
+        crypto.getRandomValues(randomBuffer);
+        // 均匀分布计算
+        const randomValue = randomBuffer[0] / (0xffffffff + 1);
+        return String(Math.floor(randomValue * range) + min);
+    } else {
+        // 注意：对于大范围，Math.random()可能无法均匀分布
+        return String(Math.floor(Math.random() * range) + min);
+    }
+}

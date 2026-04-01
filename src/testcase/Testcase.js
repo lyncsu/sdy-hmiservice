@@ -1,4 +1,5 @@
 import hmiService from '../HmiService';
+import { changeStringType } from '../utils/ServiceUtil';
 
 /**
  * 测试用例类
@@ -34,6 +35,13 @@ export class Testcase {
             hmiService.unsubscribeDevice('VAC-TVF-01', 'TVFTEST1').then(res => {
                 console.info('客户端-------取消!', res);
             });
+        };
+
+        window.controlDevice = () => {
+            const value = document.getElementById('inputValue').value;
+            const converted = changeStringType(value);
+            const param = { state1_ctrl: converted };
+            hmiService.controlDevice('VAC-TVF-01', 'TVFTEST1', param);
         };
     }
 }

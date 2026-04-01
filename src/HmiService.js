@@ -99,12 +99,15 @@ class HmiService extends EventDispatcher {
      * @param {*} deviceSN 设备sn码
      * @param {*} param 参数
      */
-    controlDevice(productKey, deviceSN, param) {}
+    controlDevice(productKey, deviceSN, param) {
+        if (!this._initialized) return Promise.reject('请检查初始化配置');
+
+        return this.mqttService.controlDevice(productKey, deviceSN, param);
+    }
     /**
      * 侦听消息
      */
     onMqttMessage(e) {
-        console.info('e', e);
         this.emit(e.type, e);
     }
     /**

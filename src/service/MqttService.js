@@ -1,7 +1,7 @@
 import * as mqtt from 'MQTT-browser';
 import Log from '../utils/Log';
 import { checkTypeByTopic } from '../utils/ServiceUtil';
-import { isAvaliable } from '../utils/Util';
+import { getUInt32ID, isAvaliable } from '../utils/Util';
 import ProjectService from './ProjectService';
 import { Event } from '../event/Event';
 import EventDispatcher from '../event/EventDispatcher';
@@ -30,6 +30,7 @@ export class MqttService extends EventDispatcher {
      */
     constructor() {
         super();
+
         this.bindScope();
         this.init();
     }
@@ -155,6 +156,39 @@ export class MqttService extends EventDispatcher {
         });
     }
     /**
+     * 下发控制
+     * @param {*} productKey
+     * @param {*} deviceSN
+     * @param {*} data
+     * @returns
+     */
+    controlDevice(productKey, deviceSN, params) {
+        return new Promise((resolve, reject) => {
+            if (!isAvaliable(productKey)) return reject('请传入正确的productKey');
+            if (!isAvaliable(deviceSN)) return reject('请传入正确的deviceSN');
+            if (!this.isConnected) return reject('mqtt服务未连接');
+
+            const message = JSON.stringify({ msgid: getUInt32ID(), params });
+            const target = `${productKey}/${deviceSN}`;
+            if (this.client)
+                this.client.publish(`v1/${target}/sys/property/down`, message, { qos: 1 }, (err, res) => {
+                    if (err) {
+                        Log.error(`设备下发失败 v1/${target}/sys/property/down`, err);
+                        return reject('设备下发失败');
+                    }
+                    Log.info(`设备下发 → v1/${target}/sys/property/down`, JSON.stringify(res));
+
+                    const callback = e => {
+                        const res = JSON.parse(e.data.message);
+                        if (res.code === 0) resolve(res);
+                        else reject(res.data);
+                        this.off(Event.MQTT_DOWN_REPLY, callback);
+                    };
+                    this.on(Event.MQTT_DOWN_REPLY, callback);
+                });
+        });
+    }
+    /**
      * 初始化
      */
     init() {
@@ -194,7 +228,18 @@ export class MqttService extends EventDispatcher {
         client.on('reconnect', this.onClientReconnect);
         client.on('message', this.onMessage);
         client.on('packetsend', this.onClientSend);
-        // client.on('packetreceive', this.onClientReceive);
+        client.on('packetreceive', this.onClientReceive);
+    }
+    /**
+     * 释放
+     */
+    dispose() {
+        this.disposeClient(this.client);
+        this.client = null;
+        this.subscriptions = null;
+        this.downSubscriptions = null;
+
+        super.dispose();
     }
     /**
      * 连接成功
