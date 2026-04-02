@@ -4,7 +4,7 @@ import { ProjectData } from '../model/ProjectData';
 /**
  * 项目工程服务
  */
-class ProjectService {
+export default class ProjectService {
     /**
      * 项目数据
      */
@@ -16,5 +16,3 @@ class ProjectService {
         this.projectData = new ProjectData();
     }
 }
-
-export default new ProjectService();

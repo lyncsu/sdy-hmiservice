@@ -2,13 +2,16 @@ import * as mqtt from 'MQTT-browser';
 import Log from '../utils/Log';
 import { checkTypeByTopic } from '../utils/ServiceUtil';
 import { getUInt32ID, isAvaliable } from '../utils/Util';
-import ProjectService from './ProjectService';
 import { Event } from '../event/Event';
 import EventDispatcher from '../event/EventDispatcher';
 /**
  * 通信服务
  */
 export class MqttService extends EventDispatcher {
+    /**
+     * 项目数据引用
+     */
+    projectService;
     /**
      * 大网关客户端
      */
@@ -28,8 +31,10 @@ export class MqttService extends EventDispatcher {
     /**
      * 通信服务构造函数
      */
-    constructor() {
+    constructor(projectService) {
         super();
+
+        this.projectService = projectService;
 
         this.bindScope();
         this.init();
@@ -198,11 +203,11 @@ export class MqttService extends EventDispatcher {
      * 初始化客户端
      */
     initMqttClinet() {
-        if (!isAvaliable(ProjectService.projectData?.server.gateway)) return;
+        if (!isAvaliable(this.projectService.projectData?.server.gateway)) return;
 
-        const { port, username, password } = ProjectService.projectData.server.gateway;
+        const { port, username, password } = this.projectService.projectData.server.gateway;
         // 网关监听设备服务
-        const { host } = ProjectService.projectData.server.gateway;
+        const { host } = this.projectService.projectData.server.gateway;
         const client = mqtt.connect(`ws://${host}:${port}/mqtt`, {
             username: username,
             password: password,

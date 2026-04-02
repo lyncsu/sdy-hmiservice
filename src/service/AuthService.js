@@ -1,9 +1,8 @@
 import { isAvaliable } from '../utils/Util';
-
 /**
  * 权限信息服务
  */
-class AuthService {
+export default class AuthService {
     // window.isCenter ：Boolean //  true 表示当前登录角色是中央 false 表示是车站角色
     // window.currentSys : keyof authObj // HMI当前页面展示哪个系统 值为 dxt、xxt、...
     permission = {
@@ -15,9 +14,12 @@ class AuthService {
         ktsxt: 1, // 空调水系统
     };
     /**
-     * 权限信息服务构造函数
+     * 设置权限数据
+     * @param {*} obj
      */
-    constructor() {}
+    setPermission(obj) {
+        this.permission = clone(obj);
+    }
     /**
      * 检查权限
      * @returns
@@ -39,5 +41,3 @@ class AuthService {
         }
     }
 }
-
-export default new AuthService();

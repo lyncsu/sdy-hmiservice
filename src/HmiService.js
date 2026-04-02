@@ -1,10 +1,11 @@
-import ProjectService from './service/ProjectService';
-import EventDispatcher from './event/EventDispatcher';
-import { clone, isAvaliable } from './utils/Util';
-import Global from './event/Global';
-import { MqttService } from './service/MqttService';
-import Log from './utils/Log';
 import { Event } from './event/Event';
+import EventDispatcher from './event/EventDispatcher';
+import Global from './event/Global';
+import AuthService from './service/AuthService';
+import { MqttService } from './service/MqttService';
+import ProjectService from './service/ProjectService';
+import Log from './utils/Log';
+import { isAvaliable } from './utils/Util';
 /**
  * Hmi服务
  */
@@ -18,6 +19,14 @@ class HmiService extends EventDispatcher {
      */
     mqttService;
     /**
+     * 项目服务
+     */
+    projectService;
+    /**
+     * 权限服务
+     */
+    authService;
+    /**
      * 构造函数
      */
     constructor() {
@@ -25,7 +34,10 @@ class HmiService extends EventDispatcher {
 
         this._initialized = false;
 
-        window.projectService = ProjectService;
+        this.projectService = new ProjectService();
+        this.authService = new AuthService();
+
+        window.projectService = this.projectService;
 
         this.bindScope();
     }
@@ -37,13 +49,13 @@ class HmiService extends EventDispatcher {
     init(params) {
         return new Promise((resolve, reject) => {
             if (!isAvaliable(params?.gateway)) return reject('大网关项目配置必填');
-            else ProjectService.projectData.server.gateway = params?.gateway;
+            else this.projectService.projectData.server.gateway = params?.gateway;
             // 调试模式
             Global.debug = Boolean(params?.debug);
             // 日志
             Log.level = Global.debug ? 4 : 0;
 
-            this.mqttService = new MqttService();
+            this.mqttService = new MqttService(this.projectService);
             this.mqttService.on(Event.MQTT_DEVICE_MESSAGE, this.onMqttMessage);
 
             this._initialized = true;
@@ -66,7 +78,7 @@ class HmiService extends EventDispatcher {
      */
     setPermission(authObj) {
         if (!isAvaliable(authObj)) return;
-        this.authService.permission = clone(authObj);
+        this.authService.setPermission(authObj);
     }
     /**
      * 订阅设备
@@ -89,10 +101,6 @@ class HmiService extends EventDispatcher {
 
         return this.mqttService.unsubscribeDevice(productKey, deviceSN);
     }
-    /**
-     * 全部取消订阅
-     */
-    unsubscribeAll() {}
     /**
      * 控制设备
      * @param {*} productKey 设备类别
