@@ -144,8 +144,8 @@ export class MqttService extends EventDispatcher {
                 // 下发订阅
                 if (isAvaliable(this.downSubscriptions)) {
                     const downIndex = this.downSubscriptions.findIndex(sub => sub === `${productKey}/${deviceSN}`);
-                    if (downItem !== -1) {
-                        const downItem = this.subscriptions.splice(downIndex, 1);
+                    if (downIndex !== -1) {
+                        const downItem = this.downSubscriptions.splice(downIndex, 1);
                         if (this.client)
                             this.client.unsubscribe(`v1/${downItem}/sys/property/down_reply`, err => {
                                 if (err) {

@@ -52,6 +52,7 @@ class HmiService extends EventDispatcher {
             else this.projectService.projectData.server.gateway = params?.gateway;
             // 调试模式
             Global.debug = Boolean(params?.debug);
+            console.info('debug', Global.debug);
             // 日志
             Log.level = Global.debug ? 4 : 0;
 
