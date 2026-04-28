@@ -58,6 +58,8 @@ class HmiService extends EventDispatcher {
 
             this.mqttService = new MqttService(this.projectService);
             this.mqttService.on(Event.MQTT_DEVICE_MESSAGE, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_PACKETSEND, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_PACKETRECEIVE, this.onMqttMessage);
 
             this._initialized = true;
 
@@ -117,7 +119,7 @@ class HmiService extends EventDispatcher {
      * 侦听消息
      */
     onMqttMessage(e) {
-        this.emit(e.type, e);
+        this.emit(e.type, e.data);
     }
     /**
      * 绑定作用域

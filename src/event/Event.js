@@ -7,6 +7,10 @@ export class Event {
     /** mqtt消息总线 */
     static MQTT_MESSAGE = 'mqtt_message';
     /** mqtt设备消息 */
+    static MQTT_PACKETSEND = 'mqtt_packetsend';
+    /** mqtt设备消息 */
+    static MQTT_PACKETRECEIVE = 'mqtt_packetreceive';
+    /** mqtt设备消息 */
     static MQTT_DEVICE_MESSAGE = 'mqtt_device_message';
     /** mqtt告警消息 */
     static MQTT_ALARM_MESSAGE = 'mqtt_alarm_message';

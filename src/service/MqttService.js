@@ -311,12 +311,14 @@ export class MqttService extends EventDispatcher {
      * 离线
      */
     onClientSend(packet) {
+        this.emit(Event.MQTT_PACKETSEND, packet);
         Log.info('MQTT发送 →', JSON.stringify(packet));
     }
     /**
      * 离线
      */
     onClientReceive(packet) {
+        this.emit(Event.MQTT_PACKETRECEIVE, packet);
         Log.info(`MQTT接收 ←`, JSON.stringify(packet));
     }
     /**
