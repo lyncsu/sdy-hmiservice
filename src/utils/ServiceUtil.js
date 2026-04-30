@@ -99,3 +99,32 @@ export function checkTypeByTopic(topic) {
     if (topic.indexOf('sys/onlinestatus/up') !== -1) return MqttMessageType.ONLINE;
     return MqttMessageType.UNKNOWN;
 }
+/**
+ * 检查合法ip
+ * @param ip
+ * @returns
+ */
+export function isValidIPv4(ip) {
+    const ipv4Regex =
+        /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    return ipv4Regex.test(ip);
+}
+/**
+ * 检查合法端口
+ * @param port
+ * @returns
+ */
+export function isValidPort(port) {
+    const portRegex = /^(0|[1-9][0-9]{0,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/;
+    return portRegex.test(port);
+}
+/**
+ * 获取服务标题
+ * @param {*} type
+ * @returns
+ */
+export function getServerTitle(type) {
+    if (type === 'mqtt') return 'HMI服务';
+    if (type === 'gateway') return '大网关服务';
+    return '';
+}

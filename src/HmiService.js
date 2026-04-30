@@ -1,6 +1,7 @@
 import { Event } from './event/Event';
 import EventDispatcher from './event/EventDispatcher';
 import Global from './event/Global';
+import ApiService from './service/ApiService';
 import AuthService from './service/AuthService';
 import { MqttService } from './service/MqttService';
 import ProjectService from './service/ProjectService';
@@ -50,6 +51,8 @@ class HmiService extends EventDispatcher {
         return new Promise((resolve, reject) => {
             if (!isAvaliable(params?.gateway)) return reject('大网关项目配置必填');
             else this.projectService.projectData.server.gateway = params?.gateway;
+            if (!isAvaliable(params?.hci)) return reject('超融合项目配置必填');
+            else this.projectService.projectData.server.hci = params?.hci;
             // 调试模式
             Global.debug = Boolean(params?.debug);
             console.info('debug', Global.debug);
@@ -62,6 +65,8 @@ class HmiService extends EventDispatcher {
             this.mqttService.on(Event.MQTT_PACKETRECEIVE, this.onMqttMessage);
 
             this._initialized = true;
+
+            ApiService.init(this.projectService);
 
             resolve();
         });
@@ -82,6 +87,14 @@ class HmiService extends EventDispatcher {
     setPermission(authObj) {
         if (!isAvaliable(authObj)) return;
         this.authService.setPermission(authObj);
+    }
+    /**
+     * 按deviceSn获取设备影子
+     * @param deviceSns
+     * @returns
+     */
+    loadDeviceShadowByDeviceSn(params) {
+        return ApiService.loadDeviceShadowByDeviceSn(params);
     }
     /**
      * 订阅设备
