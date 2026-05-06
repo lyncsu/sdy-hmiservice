@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hmi CoreLib Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <script src="./lib/hmiservice.min.js"></script>
+    <script src="./static/log.js"></script>
+    <script src="./static/json-formatter.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 5px;
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .row+.row {
+            margin-top: 10px;
+        }
+
+        .lbl {
+            font-size: 13px;
+            color: #666;
+            width: 48px;
+            flex-shrink: 0;
+        }
+
+        input[type=text] {
+            height: 32px;
+            padding: 0 9px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: #fafafa;
+            color: #222;
+            font-size: 13px;
+            font-family: monospace;
+            outline: none;
+        }
+
+        input[type=text]:focus {
+            border-color: #aaa;
+            background: #fff;
+        }
+
+        .colon {
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        .btn {
+            height: 32px;
+            padding: 0 14px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: #fff;
+            color: #333;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+        }
+
+        .btn:active {
+            transform: scale(.97);
+        }
+
+        .btn-primary {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .btn-primary:hover {
+            background: #444;
+            border-color: #444;
+        }
+
+        .btn-danger {
+            color: #c0392b;
+            border-color: #f5c6c3;
+            background: #fff8f8;
+        }
+
+        .btn-danger:hover {
+            background: #fde8e6;
+        }
+
+        .field-lbl {
+            font-size: 12px;
+            color: #666;
+            margin-right: 2px;
+        }
+
+        .sep {
+            width: 1px;
+            height: 20px;
+            background: #eee;
+            margin: 0 4px;
+        }
+
+        #log {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-top: 0;
+            min-height: 110px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .log-hdr {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-top: 0;
+            padding: 0 0 4px;
+        }
+
+        .ll {
+            font-size: 12px;
+            font-family: monospace;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .ll .ts {
+            color: #bbb;
+            margin-right: 8px;
+        }
+
+        .ll.ok span:not(.ts) {
+            color: #27ae60;
+        }
+
+        .ll.err span:not(.ts) {
+            color: #c0392b;
+        }
+
+        .ibk {
+            display: inline-block
+        }
+
+        .card-title-check {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHJ4PSIzIiBmaWxsPSIjMWVkNzYwIi8+PHBhdGggZD0iTTQuNSA4IEw3IDEwLjUgTDExLjUgNS41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=') no-repeat center;
+            background-size: contain;
+            margin-right: 6px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="card">
+            <div class="card-title">1) 连接配置</div>
+            <div id="check1" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="row">
+                <span class="field-lbl">大网关</span>
+                <input id="ipValue" type="text" style="width:130px" value="192.168.202.12" />
+                <span class="colon">:</span>
+                <input id="portValue" type="text" style="width:54px" value="8085" />
+            </div>
+            <div class="row">
+                <span class="field-lbl">超融合</span>
+                <input id="hciIpValue" type="text" style="width:130px" value="192.168.202.12" />
+                <span class="colon">:</span>
+                <input id="hciPortValue" type="text" style="width:54px" value="2100" />
+                <div class="sep"></div>
+                <button class="btn btn-primary" onclick="init()">初始化</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">2) 设备订阅</div>
+            <div id="check2" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="row">
+                <span class="field-lbl">产品</span>
+                <input id="productKeyValue" type="text" style="width:100px" value="VAC-TVF-01" />
+                <span class="field-lbl" style="margin-left:4px">序列号</span>
+                <input id="deviceSnValue" type="text" style="width:90px" value="TVFTEST1" />
+                <div class="sep"></div>
+                <button class="btn btn-primary" onclick="subscribeDevice()">订阅</button>
+                <button class="btn btn-danger" onclick="unsubscribeDevice()">取消</button>
+                <button class="btn" onclick="getShadow()">影子</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">3) 指令下发</div>
+            <div id="check3" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="row">
+                <span class="field-lbl">标签</span>
+                <input id="tagValue" type="text" style="width:110px" value="ao1_ctrl" />
+                <span class="field-lbl" style="margin-left:4px">值</span>
+                <input id="inputValue" type="text" style="width:56px" value="0" />
+                <div class="sep"></div>
+                <button class="btn btn-primary" onclick="controlDevice()">下发</button>
+            </div>
+        </div>
+
+        <div class="card" id="outputContainer" style="display:none;background:#eee;">
+            <div class="card-title">输出</div>
+            <div id="output"></div>
+        </div>
+    </div>
+    <div id="log-container"></div>
+    <script>
+        const logPanel = new LogPanel(document.getElementById('log-container'));
+
+        hmiService.on('mqtt_device_message', e => {
+            console.info('客户端-------设备!', JSON.stringify(e.data));
+            const topic = e.data.topic
+            const message = JSON.parse(JSON.stringify(e.data.message))
+            logPanel.log('设备:' + topic + ' ' + String.fromCharCode(...message.data))
+        });
+
+        hmiService.on('mqtt_packetsend', e => {
+            console.info('客户端-------发送!', e);
+            logPanel.log('发送:' + JSON.stringify(e.data))
+        });
+
+        hmiService.on('mqtt_packetreceive', e => {
+            console.info('客户端-------接收!', e);
+            logPanel.log('接收:' + JSON.stringify(e.data))
+        });
+
+        function subscribeDevice() {
+            hmiService.subscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, true).then(res => {
+                console.info('客户端-------订阅!', res);
+                logPanel.log('订阅:' + res)
+            });
+        };
+
+        function unsubscribeDevice() {
+            hmiService.unsubscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value).then(res => {
+                console.info('客户端-------取消!', res);
+                logPanel.log('取消订阅:' + res)
+            });
+        };
+
+        function controlDevice() {
+            const value = document.getElementById('inputValue').value;
+            const tag = document.getElementById('tagValue').value;
+            const param = {}
+            param[tag] = value;
+            hmiService.controlDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, param);
+        };
+
+        function getShadow() {
+            hmiService.loadDeviceShadowByDeviceSn(document.getElementById('deviceSnValue').value).then(res => {
+                console.info('客户端-------影子!', res);
+
+                document.getElementById('outputContainer').style.display = 'block'
+                JsonFormatter.render(res, document.getElementById('output'))
+            });
+        }
+
+        function init() {
+            hmiService
+                .init({
+                    gateway: {
+                        host: document.getElementById('ipValue').value,
+                        port: document.getElementById('portValue').value,
+                        username: 'sec-dt',
+                        password: 'SecdtEdge123456',
+                    },
+                    hci: {
+                        host: document.getElementById('hciIpValue').value,
+                        port: document.getElementById('hciPortValue').value,
+                    },
+                    debug: true,
+                })
+                .then(() => {
+                    console.info('客户端-------初始化!');
+                    document.getElementById('check1').style.visibility = "visible"
+                }, (err) => {
+                    console.info('客户端-------初始化失败!', err)
+                });
+        }
+
+    </script>
+</body>
+
+</html>
