@@ -188,15 +188,32 @@
             display: inline-block
         }
 
+        .card-title-container {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+        }
+
         .card-title-check {
-            content: "";
+            position: absolute;
+            display: block;
             width: 16px;
             height: 16px;
-            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHJ4PSIzIiBmaWxsPSIjMWVkNzYwIi8+PHBhdGggZD0iTTQuNSA4IEw3IDEwLjUgTDExLjUgNS41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=') no-repeat center;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='14' height='14' rx='3' fill='%231ed760'/%3E%3Cpolyline points='4.5,8 7,10.5 11.5,5.5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-size: contain;
-            margin-right: 6px;
-            vertical-align: middle;
+        }
+
+        .card-title-error {
+            display: block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='14' height='14' rx='3' fill='%23c0392b'/%3E%3Cline x1='5' y1='5' x2='11' y2='11' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3Cline x1='11' y1='5' x2='5' y2='11' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        .card-info-container {
             display: inline-block;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -205,7 +222,13 @@
     <div id="container">
         <div class="card">
             <div class="card-title">1) 连接配置</div>
-            <div id="check1" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="card-title-container">
+                <div id="check1" class="card-title-check" style="visibility: hidden;"></div>
+                <div id="error1" class="card-title-error" style="visibility: hidden;"></div>
+            </div>
+            <div class="card-info-container">
+                <span id="info1"></span>
+            </div>
             <div class="row">
                 <span class="field-lbl">大网关</span>
                 <input id="ipValue" type="text" style="width:130px" value="192.168.202.12" />
@@ -224,7 +247,13 @@
 
         <div class="card">
             <div class="card-title">2) 设备订阅</div>
-            <div id="check2" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="card-title-container">
+                <div id="check2" class="card-title-check" style="visibility: hidden;"></div>
+                <div id="error2" class="card-title-error" style="visibility: hidden;"></div>
+            </div>
+            <div class="card-info-container">
+                <span id="info2"></span>
+            </div>
             <div class="row">
                 <span class="field-lbl">产品</span>
                 <input id="productKeyValue" type="text" style="width:100px" value="VAC-TVF-01" />
@@ -239,7 +268,13 @@
 
         <div class="card">
             <div class="card-title">3) 指令下发</div>
-            <div id="check3" class="card-title-check" style="visibility: hidden;"></div>
+            <div class="card-title-container">
+                <div id="check3" class="card-title-check" style="visibility: hidden;"></div>
+                <div id="error3" class="card-title-error" style="visibility: hidden;"></div>
+            </div>
+            <div class="card-info-container">
+                <span id="info3"></span>
+            </div>
             <div class="row">
                 <span class="field-lbl">标签</span>
                 <input id="tagValue" type="text" style="width:110px" value="ao1_ctrl" />
@@ -278,15 +313,25 @@
 
         function subscribeDevice() {
             hmiService.subscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, true).then(res => {
-                console.info('客户端-------订阅!', res);
+                console.info('客户端-------订阅!', res)
                 logPanel.log('订阅:' + res)
+                showInfo(2, '订阅成功')
+            }, err => {
+                console.info('客户端-------订阅失败!', err)
+                logPanel.error('订阅失败:' + err)
+                showInfo(2, '订阅失败：' + err, true)
             });
         };
 
         function unsubscribeDevice() {
             hmiService.unsubscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value).then(res => {
-                console.info('客户端-------取消!', res);
+                console.info('客户端-------取消!', res)
                 logPanel.log('取消订阅:' + res)
+                showInfo(2, '取消订阅成功')
+            }, err => {
+                console.info('客户端-------取消失败!', err)
+                logPanel.error('取消订阅失败:' + err)
+                showInfo(2, '取消订阅失败：' + err, true)
             });
         };
 
@@ -295,7 +340,15 @@
             const tag = document.getElementById('tagValue').value;
             const param = {}
             param[tag] = value;
-            hmiService.controlDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, param);
+            hmiService.controlDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, param).then(res => {
+                console.info('客户端-------下发成功!', res)
+                logPanel.log('下发成功')
+                showInfo(3, '下发成功')
+            }, err => {
+                console.info('客户端-------下发阅失败!', err)
+                logPanel.error('下发失败:' + err)
+                showInfo(3, '下发失败：' + err, true)
+            })
         };
 
         function getShadow() {
@@ -324,12 +377,26 @@
                 })
                 .then(() => {
                     console.info('客户端-------初始化!');
-                    document.getElementById('check1').style.visibility = "visible"
+                    showInfo(1, '初始化成功')
                 }, (err) => {
                     console.info('客户端-------初始化失败!', err)
+                    showInfo(1, '初始化失败：' + err, true)
                 });
         }
 
+        function showInfo(id, message, isError = false) {
+            const target = document.getElementById('info' + id);
+            target.innerText = message
+            if (isError) {
+                document.getElementById('check' + id).style.visibility = "hidden"
+                document.getElementById('error' + id).style.visibility = "visible"
+                target.style.color = ''
+            } else {
+                document.getElementById('check' + id).style.visibility = "visible"
+                document.getElementById('error' + id).style.visibility = "hidden"
+                target.style.color = '#00bb44'
+            }
+        }
     </script>
 </body>
 

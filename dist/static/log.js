@@ -86,7 +86,7 @@
         '.lc-rh-se{bottom:0;right:0;width:12px;height:12px;cursor:se-resize}',
     ].join('');
 
-    var LEVELS = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'SUCCESS'];
+    var LEVELS = ['INFO', 'WARN', 'ERROR', 'DEBUG'];
     var TITLEBAR_H = 36;
 
     // ─── inject styles once ─────────────────────────────────────────────────────
@@ -534,9 +534,9 @@
     };
 
     // Shorthand helpers
-    ['info', 'warn', 'error', 'debug', 'success'].forEach(function (lvl) {
+    ['info', 'warn', 'error', 'debug'].forEach(function (lvl) {
         LogPanel.prototype[lvl] = function (msg) {
-            return this.LogPanel(lvl.toUpperCase(), msg);
+            return this.log(msg, lvl);
         };
     });
 
