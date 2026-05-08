@@ -18,13 +18,13 @@
     var CSS = [
         '.lc-backdrop{}',
         '.lc-win{position:absolute;display:flex;flex-direction:column;background:#0d1117;border-radius:10px;',
-        'overflow:hidden;font-family:Menlo,Monaco,"Courier New",monospace;',
+        'overflow:visible;font-family:Menlo,Monaco,"Courier New",monospace;',
         'border:.5px solid rgba(255,255,255,.12);box-shadow:0 8px 32px rgba(0,0,0,.45)}',
         '.lc-win.lc-maximized{border-radius:0!important;box-shadow:none!important}',
         '.lc-win.lc-maximized .lc-rh{display:none}',
         '.lc-titlebar{display:flex;align-items:center;gap:8px;padding:10px 14px;',
         'background:#161b22;border-bottom:.5px solid rgba(255,255,255,.06);',
-        'flex-shrink:0;user-select:none;-webkit-user-select:none}',
+        'flex-shrink:0;user-select:none;-webkit-user-select:none;border-radius:10px 10px 0 0}',
         '.lc-dot{width:12px;height:12px;border-radius:50%;cursor:pointer;flex-shrink:0;position:relative}',
         '.lc-dot:hover{filter:brightness(1.25)}',
         '.lc-dot-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;',
@@ -35,7 +35,7 @@
         '.lc-badge{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap;',
         'background:rgba(30,215,96,.15);color:#1ed760;border:.5px solid rgba(30,215,96,.3)}',
         '.lc-badge.lc-paused{background:rgba(226,179,65,.15);color:#e3b341;border-color:rgba(226,179,65,.3)}',
-        '.lc-body{flex:1;display:flex;flex-direction:column;overflow:hidden}',
+        '.lc-body{flex:1;display:flex;flex-direction:column;overflow:hidden;border-radius:0 0 10px 10px}',
         '.lc-body.lc-hidden{flex:0;height:0;overflow:hidden;opacity:0;pointer-events:none}',
         '.lc-filterrow{display:flex;gap:6px;align-items:center;padding:7px 14px;',
         'border-bottom:.5px solid rgba(255,255,255,.06);flex-shrink:0}',
@@ -45,11 +45,11 @@
         '.lc-search:focus{border-color:rgba(88,166,255,.4);background:rgba(88,166,255,.05)}',
         '.lc-search::placeholder{color:rgba(255,255,255,.2)}',
         '.lc-cnt{font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap}',
-        '.lc-LogPanelarea{flex:1;overflow-y:auto;padding:8px 0;min-height:0}',
-        '.lc-LogPanelarea::-webkit-scrollbar{width:4px}',
-        '.lc-LogPanelarea::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}',
+        '.lc-log-panel-area{flex:1;overflow-y:auto;padding:8px 0;min-height:0}',
+        '.lc-log-panel-area::-webkit-scrollbar{width:7px}',
+        '.lc-log-panel-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px}',
         '.lc-row{display:flex;align-items:flex-start;padding:1px 14px;font-size:12px;line-height:1.65}',
-        '.lc-row:hover{background:rgba(255,255,255,.03)}',
+        '.lc-row:hover{background:rgba(255,255,255,.1)}',
         '.lc-ts{color:rgba(255,255,255,.22);min-width:86px;user-select:none;flex-shrink:0;font-size:11px}',
         '.lc-lvl{min-width:52px;font-weight:500;flex-shrink:0;text-align:right;padding-right:10px;font-size:11px}',
         '.lc-lvl-INFO{color:#58a6ff}.lc-lvl-WARN{color:#e3b341}.lc-lvl-ERROR{color:#f85149}',
@@ -67,6 +67,7 @@
         'background:transparent;color:rgba(255,255,255,.5);cursor:pointer;font-family:inherit;transition:all .15s}',
         '.lc-btn:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}',
         '.lc-btn.lc-active{background:rgba(88,166,255,.15);border-color:rgba(88,166,255,.4);color:#58a6ff}',
+        '.lc-btn.lc-pause-active{background:rgba(30,215,96,.15);color:#1ed760;border:.5px solid rgba(30,215,96,.3)}',
         '.lc-btn.lc-danger{border-color:rgba(248,81,73,.3);color:rgba(248,81,73,.7)}',
         '.lc-btn.lc-danger:hover{background:rgba(248,81,73,.1);color:#f85149}',
         '.lc-minbar{display:none;align-items:center;gap:8px;padding:5px 12px;',
@@ -78,12 +79,12 @@
         '.lc-rh{position:absolute;z-index:10}',
         '.lc-rh-n{top:0;left:8px;right:8px;height:5px;cursor:n-resize}',
         '.lc-rh-s{bottom:0;left:8px;right:8px;height:5px;cursor:s-resize}',
-        '.lc-rh-e{right:0;top:8px;bottom:8px;width:5px;cursor:e-resize}',
+        '.lc-rh-e{right:-13px;top:20px;bottom:20px;width:10px;cursor:e-resize}',
+        '.lc-rh-ne{top:-5px;right:-13px;width:20px;height:20px;cursor:ne-resize}',
+        '.lc-rh-se{bottom:-5px;right:-13px;width:20px;height:20px;cursor:se-resize}',
         '.lc-rh-w{left:0;top:8px;bottom:8px;width:5px;cursor:w-resize}',
         '.lc-rh-nw{top:0;left:0;width:12px;height:12px;cursor:nw-resize}',
-        '.lc-rh-ne{top:0;right:0;width:12px;height:12px;cursor:ne-resize}',
         '.lc-rh-sw{bottom:0;left:0;width:12px;height:12px;cursor:sw-resize}',
-        '.lc-rh-se{bottom:0;right:0;width:12px;height:12px;cursor:se-resize}',
     ].join('');
 
     var LEVELS = ['INFO', 'WARN', 'ERROR', 'DEBUG'];
@@ -211,7 +212,7 @@
         tb.appendChild(titleEl);
 
         var badge = el('span', 'lc-badge');
-        badge.textContent = '● 运行中';
+        badge.textContent = '• 运行中';
         this._badge = badge;
         tb.appendChild(badge);
 
@@ -239,7 +240,7 @@
         body.appendChild(fr);
 
         // LogPanel area
-        var la = el('div', 'lc-LogPanelarea');
+        var la = el('div', 'lc-log-panel-area');
         this._LogPanelarea = la;
         body.appendChild(la);
 
@@ -283,11 +284,11 @@
                 toolbar.appendChild(btn);
             });
 
-            // var pauseBtn = this._makeBtn('⏸ 暂停', false, function () {
-            //     self.togglePause();
-            // });
-            // this._pauseBtn = pauseBtn;
-            // toolbar.appendChild(pauseBtn);
+            var pauseBtn = this._makeBtn('⏸ 暂停', false, function () {
+                self.togglePause();
+            });
+            this._pauseBtn = pauseBtn;
+            toolbar.appendChild(pauseBtn);
 
             toolbar.appendChild(
                 this._makeBtn('↓ 底部', false, function () {
@@ -437,7 +438,7 @@
                     w = rsw,
                     h = rsh;
                 if (dir.includes('e')) w = Math.max(MIN_W, Math.min(rsw + dx, bw - l));
-                if (dir.includes('s')) h = Math.max(MIN_H, Math.min(rsh + dy, bh - t));
+                if (dir.includes('s')) h = Math.max(MIN_H, rsh + dy);
                 if (dir.includes('w')) {
                     var nw = Math.max(MIN_W, Math.min(rsw - dx, rsl + rsw));
                     l = rsl + rsw - nw;
@@ -497,10 +498,16 @@
         this._paused = !this._paused;
         if (this._pauseBtn) {
             this._pauseBtn.textContent = this._paused ? '▶ 继续' : '⏸ 暂停';
-            this._pauseBtn.classList.toggle('lc-active', this._paused);
+            this._pauseBtn.classList.toggle('lc-pause-active', this._paused);
         }
-        this._badge.textContent = this._paused ? '● 已暂停' : '● 运行中';
+        this._badge.textContent = this._paused ? '◦ 已暂停' : '• 运行中';
         this._badge.classList.toggle('lc-paused', this._paused);
+
+        // 恢复时重新渲染，显示暂停期间积累的日志
+        if (!this._paused) {
+            this._render();
+        }
+
         this._emit('pause', this._paused);
     };
 
@@ -526,10 +533,17 @@
     LogPanel.prototype.log = function (message, level) {
         level = (level || 'INFO').toUpperCase();
         if (LEVELS.indexOf(level) === -1) level = 'INFO';
-        this._LogPanels.push({ lvl: level, msg: String(message), time: ts() });
+
+        var entry = { lvl: level, msg: String(message), time: ts() };
+        this._LogPanels.push(entry);
         if (this._LogPanels.length > this._opts.maxLines) this._LogPanels.shift();
-        this._render();
-        this._emit('LogPanel', { level: level, message: message });
+
+        // 暂停时不渲染，等恢复后再刷新
+        if (!this._paused) {
+            this._render();
+        }
+
+        this._emit('log', { level: level, message: message });
         return this;
     };
 
