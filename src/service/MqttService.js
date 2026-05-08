@@ -252,18 +252,21 @@ export class MqttService extends EventDispatcher {
     onClientConnect(e) {
         Log.info('MQTT已连接');
         this.isConnected = true;
+        this.emit(Event.MQTT_CONNECT, e);
     }
     /**
      * 重新连接
      */
     onClientReconnect(e) {
         Log.info('MQTT尝试重连', JSON.stringify(e));
+        this.emit(Event.MQTT_RECONNECT, e);
     }
     /**
      * 服务端发包断开
      */
     onClientDisconnect(e) {
         Log.error('MQTT服务端通知断开', JSON.stringify(e));
+        this.emit(Event.MQTT_DISCONNECT, e);
         this.isConnected = false;
     }
     /**
@@ -271,6 +274,7 @@ export class MqttService extends EventDispatcher {
      */
     onClientClose() {
         Log.error('MQTT本地断开');
+        this.emit(Event.MQTT_CLOSE);
         this.isConnected = false;
     }
     /**
@@ -278,6 +282,7 @@ export class MqttService extends EventDispatcher {
      */
     onClientOffline() {
         Log.error('MQTT离线');
+        this.emit(Event.MQTT_OFFLINE);
         this.isConnected = false;
     }
     /**
@@ -285,6 +290,7 @@ export class MqttService extends EventDispatcher {
      */
     onClientError(err) {
         Log.error('MQTT异常', JSON.stringify(err));
+        this.emit(Event.MQTT_ERROR, JSON.stringify(err));
         this.isConnected = false;
     }
     /**

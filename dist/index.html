@@ -295,29 +295,51 @@
         const logPanel = new LogPanel(document.getElementById('log-container'));
 
         hmiService.on('mqtt_device_message', e => {
-            console.info('客户端-------设备!', JSON.stringify(e.data));
+            console.info('[应用端] 设备!', JSON.stringify(e.data));
             const topic = e.data.topic
             const message = JSON.parse(JSON.stringify(e.data.message))
             logPanel.log('设备:' + topic + ' ' + String.fromCharCode(...message.data))
         });
-
         hmiService.on('mqtt_packetsend', e => {
-            console.info('客户端-------发送!', e);
+            console.info('[应用端] 发送!', e);
             logPanel.log('发送:' + JSON.stringify(e.data))
         });
-
         hmiService.on('mqtt_packetreceive', e => {
-            console.info('客户端-------接收!', e);
+            console.info('[应用端] 接收!', e);
             logPanel.log('接收:' + JSON.stringify(e.data))
+        });
+        hmiService.on('mqtt_connect', e => {
+            console.info('[应用端] 连接!', e);
+            logPanel.log('连接:' + JSON.stringify(e.data))
+        });
+        hmiService.on('mqtt_disconnect', e => {
+            console.error('[应用端] 断开连接!', e);
+            logPanel.error('断开连接')
+        });
+        hmiService.on('mqtt_reconnect', e => {
+            console.info('[应用端] 重新连接!', e);
+            logPanel.log('重新连接')
+        });
+        hmiService.on('mqtt_close', e => {
+            console.error('[应用端] 关闭!', e);
+            logPanel.error('关闭')
+        });
+        hmiService.on('mqtt_offline', e => {
+            console.error('[应用端] 离线!', e);
+            logPanel.error('离线')
+        });
+        hmiService.on('mqtt_error', e => {
+            console.error('[应用端] 报错!', e);
+            logPanel.error('报错:' + JSON.stringify(e.data))
         });
 
         function subscribeDevice() {
             hmiService.subscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, true).then(res => {
-                console.info('客户端-------订阅!', res)
+                console.info('[应用端] 订阅!', res)
                 logPanel.log('订阅:' + res)
                 showInfo(2, '订阅成功')
             }, err => {
-                console.info('客户端-------订阅失败!', err)
+                console.info('[应用端] 订阅失败!', err)
                 logPanel.error('订阅失败:' + err)
                 showInfo(2, '订阅失败：' + err, true)
             });
@@ -325,11 +347,11 @@
 
         function unsubscribeDevice() {
             hmiService.unsubscribeDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value).then(res => {
-                console.info('客户端-------取消!', res)
+                console.info('[应用端] 取消!', res)
                 logPanel.log('取消订阅:' + res)
                 showInfo(2, '取消订阅成功')
             }, err => {
-                console.info('客户端-------取消失败!', err)
+                console.info('[应用端] 取消失败!', err)
                 logPanel.error('取消订阅失败:' + err)
                 showInfo(2, '取消订阅失败：' + err, true)
             });
@@ -341,11 +363,11 @@
             const param = {}
             param[tag] = value;
             hmiService.controlDevice(document.getElementById('productKeyValue').value, document.getElementById('deviceSnValue').value, param).then(res => {
-                console.info('客户端-------下发成功!', res)
+                console.info('[应用端] 下发成功!', res)
                 logPanel.log('下发成功')
                 showInfo(3, '下发成功')
             }, err => {
-                console.info('客户端-------下发阅失败!', err)
+                console.info('[应用端] 下发阅失败!', err)
                 logPanel.error('下发失败:' + err)
                 showInfo(3, '下发失败：' + err, true)
             })
@@ -353,7 +375,7 @@
 
         function getShadow() {
             hmiService.loadDeviceShadowByDeviceSn(document.getElementById('deviceSnValue').value).then(res => {
-                console.info('客户端-------影子!', res);
+                console.info('[应用端] 影子!', res);
 
                 document.getElementById('outputContainer').style.display = 'block'
                 JsonFormatter.render(res, document.getElementById('output'))
@@ -376,10 +398,10 @@
                     debug: true,
                 })
                 .then(() => {
-                    console.info('客户端-------初始化!');
+                    console.info('[应用端] 初始化!');
                     showInfo(1, '初始化成功')
                 }, (err) => {
-                    console.info('客户端-------初始化失败!', err)
+                    console.info('[应用端] 初始化失败!', err)
                     showInfo(1, '初始化失败：' + err, true)
                 });
         }

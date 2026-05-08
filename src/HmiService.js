@@ -59,12 +59,18 @@ class HmiService extends EventDispatcher {
             else this.projectService.projectData.server.hci = params?.hci;
             // 调试模式
             Global.debug = Boolean(params?.debug);
-            console.info('debug', Global.debug);
             // 日志
             Log.level = Global.debug ? 4 : 0;
+            Log.info('debug', Global.debug);
 
             this.mqttService = new MqttService(this.projectService);
             this.mqttService.on(Event.MQTT_DEVICE_MESSAGE, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_CONNECT, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_DISCONNECT, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_RECONNECT, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_CLOSE, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_OFFLINE, this.onMqttMessage);
+            this.mqttService.on(Event.MQTT_ERROR, this.onMqttMessage);
             this.mqttService.on(Event.MQTT_PACKETSEND, this.onMqttMessage);
             this.mqttService.on(Event.MQTT_PACKETRECEIVE, this.onMqttMessage);
 

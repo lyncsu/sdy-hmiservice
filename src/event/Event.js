@@ -6,6 +6,18 @@ export class Event {
     static MQTT_SUBSCRIBE = 'mqtt_subscribe';
     /** mqtt消息总线 */
     static MQTT_MESSAGE = 'mqtt_message';
+    /** mqtt连接 */
+    static MQTT_CONNECT = 'mqtt_connect';
+    /** mqtt重连 */
+    static MQTT_RECONNECT = 'mqtt_reconnect';
+    /** mqtt断开 */
+    static MQTT_DISCONNECT = 'mqtt_disconnect';
+    /** mqtt离线 */
+    static MQTT_OFFLINE = 'mqtt_offline';
+    /** mqtt关闭 */
+    static MQTT_CLOSE = 'mqtt_close';
+    /** mqtt错误 */
+    static MQTT_ERROR = 'mqtt_error';
     /** mqtt设备消息 */
     static MQTT_PACKETSEND = 'mqtt_packetsend';
     /** mqtt设备消息 */
