@@ -6,6 +6,7 @@ import AuthService from './service/AuthService';
 import { MqttService } from './service/MqttService';
 import ProjectService from './service/ProjectService';
 import Log from './utils/Log';
+import { isValidIPv4, isValidPort } from './utils/ServiceUtil';
 import { isAvaliable } from './utils/Util';
 /**
  * Hmi服务
@@ -51,12 +52,17 @@ class HmiService extends EventDispatcher {
         return new Promise((resolve, reject) => {
             if (!isAvaliable(params?.gateway)) return reject('大网关配置为必填');
             else if (!isAvaliable(params?.gateway?.host)) return reject('大网关地址为必填');
+            else if (!isValidIPv4(params?.gateway?.host)) return reject('超融合地址不正确');
             else if (!isAvaliable(params?.gateway?.port)) return reject('大网关端口为必填');
+            else if (!isValidPort(params?.gateway?.port)) return reject('超融合端口不正确');
             else this.projectService.projectData.server.gateway = params?.gateway;
             if (!isAvaliable(params?.hci)) return reject('超融合配置必填');
             else if (!isAvaliable(params?.hci?.host)) return reject('超融合地址为必填');
+            else if (!isValidIPv4(params?.hci?.host)) return reject('超融合地址不正确');
             else if (!isAvaliable(params?.hci?.port)) return reject('超融合端口为必填');
+            else if (!isValidPort(params?.hci?.port)) return reject('超融合端口不正确');
             else this.projectService.projectData.server.hci = params?.hci;
+
             // 调试模式
             Global.debug = Boolean(params?.debug);
             // 日志

@@ -255,7 +255,7 @@
                 <span id="info2"></span>
             </div>
             <div class="row">
-                <span class="field-lbl">产品</span>
+                <span class="field-lbl">设备类型Key</span>
                 <input id="productKeyValue" type="text" style="width:100px" value="VAC-TVF-01" />
                 <span class="field-lbl" style="margin-left:4px">序列号</span>
                 <input id="deviceSnValue" type="text" style="width:90px" value="TVFTEST1" />
@@ -379,6 +379,8 @@
 
                 document.getElementById('outputContainer').style.display = 'block'
                 JsonFormatter.render(res, document.getElementById('output'))
+            }, err => {
+                showInfo(2, '影子获取失败:' + err, true)
             });
         }
 

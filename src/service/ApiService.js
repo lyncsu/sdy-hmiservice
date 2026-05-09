@@ -19,6 +19,18 @@ class ApiService {
      */
     loadDeviceShadowByDeviceSn(params) {
         return new Promise(async (resolve, reject) => {
+            if (!isAvaliable(Api.server) || !isAvaliable(Api.server?.hci)) {
+                reject('未正确初始化!');
+                return;
+            }
+            if (!isAvaliable(Api.server?.hci?.host)) {
+                reject('未配置超融合服务地址!');
+                return;
+            }
+            if (!isAvaliable(Api.server?.hci?.port)) {
+                reject('未配置超融合服务端口!');
+                return;
+            }
             const url = 'deviceShadow/list';
             try {
                 const deviceSns = typeof params === 'string' ? [params] : params;
@@ -40,6 +52,8 @@ class ApiService {
 
                         if (!this.checkValidResponse(res)) {
                             Log.error(`第${index + 1}批设备影子加载失败: ${url}`, res.data.msg);
+                            reject(`第${index + 1}批设备影子加载失败: ${url}` + res.data.msg);
+
                             return [];
                         }
 
@@ -52,6 +66,7 @@ class ApiService {
 
                         // 处理单批次请求中的错误，但不中断整体流程
                         Log.error(`第${index + 1}批设备影子加载失败`, err);
+                        reject(`第${index + 1}批设备影子加载失败` + err);
                         return []; // 返回空数组，让其他批次能够继续
                     }
                 });
