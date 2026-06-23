@@ -11,8 +11,12 @@ class Api {
     get(type) {
         if (!this.server) return;
         switch (type) {
+            // 设备影子
             case 'deviceShadow/list':
                 return `http://${this.server.hci.host}:${this.server.hci.port}/hci-alarm-base/v1/deviceShadow/list`;
+            // 实时报警
+            case 'alarmRealRecord/pageList':
+                return `http://${this.server.hci.host}:${this.server.hci.port}/hci-alarm-base/v1/alarmRealRecord/pageList`;
         }
         return;
     }

@@ -113,6 +113,14 @@ class HmiService extends EventDispatcher {
         return ApiService.loadDeviceShadowByDeviceSn(params);
     }
     /**
+     * 按deviceSn获取设备影子
+     * @param deviceSns
+     * @returns
+     */
+    loadAlarmList(params) {
+        return ApiService.loadRealtimeAlarmList(params);
+    }
+    /**
      * 订阅设备
      * @param {string} productKey 设备类别
      * @param {string} deviceSN 设备sn码

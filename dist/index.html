@@ -215,6 +215,43 @@
             display: inline-block;
             font-size: 11px;
         }
+
+        .alarm-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .alarm-table th,
+        .alarm-table td {
+            border: 1px solid #e0e0e0;
+            padding: 7px 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .alarm-table thead tr {
+            background: #f5f5f5;
+        }
+
+        .alarm-table th {
+            font-weight: 600;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .alarm-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .alarm-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .alarm-table td {
+            color: #333;
+        }
     </style>
 </head>
 
@@ -258,7 +295,7 @@
                 <span class="field-lbl">设备类型Key</span>
                 <input id="productKeyValue" type="text" style="width:100px" value="VAC-TVF-01" />
                 <span class="field-lbl" style="margin-left:4px">序列号</span>
-                <input id="deviceSnValue" type="text" style="width:90px" value="TVFTEST1" />
+                <input id="deviceSnValue" type="text" style="width:90px" value="01-01-TVF-TEST-001" />
                 <div class="sep"></div>
                 <button class="btn btn-primary" onclick="subscribeDevice()">订阅</button>
                 <button class="btn btn-danger" onclick="unsubscribeDevice()">取消</button>
@@ -277,11 +314,58 @@
             </div>
             <div class="row">
                 <span class="field-lbl">标签</span>
-                <input id="tagValue" type="text" style="width:110px" value="ao1_ctrl" />
+                <input id="tagValue" type="text" style="width:110px" value="state1_ctrl" />
                 <span class="field-lbl" style="margin-left:4px">值</span>
                 <input id="inputValue" type="text" style="width:56px" value="0" />
                 <div class="sep"></div>
                 <button class="btn btn-primary" onclick="controlDevice()">下发</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">4) 报警</div>
+            <div class="card-title-container">
+                <div id="check4" class="card-title-check" style="visibility: hidden;"></div>
+                <div id="error4" class="card-title-error" style="visibility: hidden;"></div>
+            </div>
+            <div class="card-info-container">
+                <span id="info4"></span>
+            </div>
+            <div class="row">
+                <table class="alarm-table">
+                    <thead>
+                        <tr>
+                            <th>报警产生时间</th>
+                            <th>设备编号</th>
+                            <th>报警等级</th>
+                            <th>是否确认</th>
+                            <th>确认时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                        </tr>
+                        <tr>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                        </tr>
+                        <tr>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>YYYY-MM-DD HH:MM:SS</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 

@@ -13,6 +13,33 @@ class ApiService {
         if (res.code !== 0) return Log.error(res.msg);
     }
     /**
+     * 实时报警列表
+     * @param pageNum
+     * @param pageSize
+     * @returns
+     */
+    loadRealtimeAlarmList(params = { pageSize: 3, pageNum: 1 }, signal) {
+        return new Promise((resolve, reject) => {
+            const url = 'alarmRealRecord/pageList';
+            axios
+                .get(Api.get(url), {
+                    params: params,
+                })
+                .then(res => {
+                    if (!this.checkValidResponse(res)) return resolve(null);
+                    resolve(res.data);
+                })
+                .catch(err => {
+                    const isCancel = axios.isCancel(err);
+                    if (isCancel) {
+                        this.logService.info('实时报警加载已被取消');
+                    }
+                    Log.error(`接口读取失败: ${url}`);
+                    reject(err);
+                });
+        });
+    }
+    /**
      * 按deviceSn获取设备影子
      * @param deviceSns
      * @returns
@@ -101,15 +128,9 @@ class ApiService {
                     // 请求配置出错
                     Log.error(`设备影子请求配置错误: ${url}`, err.message);
                 }
-                if (!isCancel)
-                    this.toastr.error('网络错误', '设备影子接口', {
-                        timeOut: 3000,
-                        closeButton: true,
-                        // disableTimeOut: true
-                    });
-                reject(err);
                 // 处理获取过程中的任何错误
                 Log.error('设备影子加载失败', err);
+                reject(err);
             }
         });
     }
